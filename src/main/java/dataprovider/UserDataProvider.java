@@ -13,4 +13,12 @@ public class UserDataProvider {
         return new Object[][]{{usuario}};
     }
 
+    @DataProvider(name = "atualizarUsuario")
+    public static Object[][] atualizarUsuarioData() {
+        UserDTO usuarioAtualizado = new UserDTO();
+        usuarioAtualizado.setName("Updated Automation");
+        usuarioAtualizado.setJob("Tech Lead Engineer Automation");
+        return new Object[][]{{usuarioAtualizado}};
+    }
+
 }

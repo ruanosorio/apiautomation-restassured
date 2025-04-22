@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Data
 public class UserDTO {
-
+    private Integer id;
     private String name;
     private String job;
 
