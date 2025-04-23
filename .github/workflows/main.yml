@@ -1,0 +1,25 @@
+name: Teste Upload Artifact Minimal
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test_upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: Criar um arquivo de teste
+        run: |
+          mkdir -p build/temp_artifact
+          echo "Arquivo de teste minimal" > build/temp_artifact/teste.txt
+
+      - name: Tentar Upload de Artefato
+        uses: actions/upload-artifact@v3
+        with:
+          name: teste-artifact
+          path: build/temp_artifact/
