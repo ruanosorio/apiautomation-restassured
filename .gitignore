@@ -258,4 +258,7 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
+allure-results/
+
+
 # End of https://www.toptal.com/developers/gitignore/api/git,java,linux,macos,gradle,windows,intellij
