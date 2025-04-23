@@ -1,0 +1,42 @@
+name: API Automation Pipeline
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: Instalar Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Configurar permissões do Gradle
+        run: chmod +x gradlew
+
+      - name: Rodar os testes com Gradle
+        run: ./gradlew clean test
+
+      - name: Gerar Relatório Allure
+        run: ./gradlew allureReport
+
+      - name: Publicar Allure Report como artefato
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-report
+          path: build/reports/allure-report/
+
+      - name: Salvar resultados do Allure (caso precise para outro job)
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-results
+          path: build/allure-results/
