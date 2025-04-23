@@ -30,13 +30,13 @@ jobs:
         run: ./gradlew allureReport
 
       - name: Publicar Allure Report como artefato
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: allure-report
           path: build/reports/allure-report/
 
       - name: Salvar resultados do Allure (caso precise para outro job)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: allure-results
           path: build/allure-results/
