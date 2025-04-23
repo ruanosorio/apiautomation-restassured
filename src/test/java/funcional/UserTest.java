@@ -3,6 +3,7 @@ package funcional;
 import clients.UserClient;
 import dataprovider.UserDataProvider;
 import dto.UserDTO;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
@@ -10,6 +11,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+@Feature("Testes para validar CRUD de Usuários")
 public class UserTest {
 
     private UserClient userClient;
@@ -20,6 +22,10 @@ public class UserTest {
         userClient = new UserClient();
     }
 
+
+    @Story("Criação de novo usuário")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Este teste valida a criação de um novo usuário na API utilizando dados válidos.")
     @Test(dataProvider = "criarNovoUsuario", dataProviderClass = UserDataProvider.class)
     public void validarCriacaoNovoUsuarioTeste(UserDTO usuario) {
         userClient.createUser(usuario)
@@ -31,6 +37,8 @@ public class UserTest {
     }
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Story("Consultar Listagem de Usuarios")
     public void validarConsultaListaDeUsuariosTeste() {
         userClient.getUsers()
                 .then()
@@ -40,6 +48,7 @@ public class UserTest {
     }
 
     @Test(dataProvider = "atualizarUsuario", dataProviderClass = UserDataProvider.class, dependsOnMethods = "validarCriacaoNovoUsuarioTeste")
+    @Story("Atualizar dados de usuário válido")
     public void validarAtualizarUsuarioTeste(UserDTO usuarioAtualizado) {
         userClient.updateUser(userIdDelecao, usuarioAtualizado)
                 .then()
@@ -51,6 +60,7 @@ public class UserTest {
     }
 
     @Test(dependsOnMethods = "validarAtualizarUsuarioTeste")
+    @Story("Deletar registro de usuário")
     public void validarDelecaoUsuarioTeste() {
         // Criando um usuário para o teste de deleção
         UserDTO usuarioCriacao = new UserDTO();
