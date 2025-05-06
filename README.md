@@ -13,22 +13,22 @@ Este projeto tem como objetivo realizar testes automatizados de backend na API p
 - **Allure Report:** Geração de relatórios elegantes e interativos.
 
 ## 📁 Estrutura do Projeto
-src/
-├── main/
-│   ├── java/
-│   │   ├── clients/         # Requisições à API
-│   │   ├── dataprovider/    # Fornecedores de dados para os testes
-│   │   ├── dto/             # Objetos de transferência de dados (ex: UserDTO)
-│   │   ├── spec/            # Especificações e configurações do RestAssured
-│   │   └── utils/           # Classe base e utilitários
-│   └── resources/
-├── test/
-│   ├── java/
-│   │   ├── contract/        # Testes de contrato (validação de schema)
-│   │   ├── funcional/       # Testes funcionais da API
-│   │   └── SmokeTest.java   # Testes de fumaça (smoke test)
-│   └── resources/
-│       └── json_schemas/    # Schemas JSON para validação
+- src/
+- ├── main/
+- │   ├── java/
+- │   │   ├── clients/         # Requisições à API
+- │   │   ├── dataprovider/    # Fornecedores de dados para os testes
+- │   │   ├── dto/             # Objetos de transferência de dados (ex: UserDTO)
+- │   │   ├── spec/            # Especificações e configurações do RestAssured
+- │   │   └── utils/           # Classe base e utilitários
+- │   └── resources/
+- ├── test/
+- │   ├── java/
+- │   │   ├── contract/        # Testes de contrato (validação de schema)
+- │   │   ├── funcional/       # Testes funcionais da API
+- │   │   └── SmokeTest.java   # Testes de fumaça (smoke test)
+- │   └── resources/
+- │       └── json_schemas/    # Schemas JSON para validação
 
 
 ## Execução de todos os cenários de testes:
