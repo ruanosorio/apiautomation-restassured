@@ -18,6 +18,7 @@ public class ReqResAPISpecification {
         return new RequestSpecBuilder().
                 setBaseUri(BASE_URI).
                 setContentType(ContentType.JSON).
+                addHeader("x-api-key", "reqres-free-v1").
                 log(ALL).
                 addFilter(new ResponseLoggingFilter()).
                 build();
