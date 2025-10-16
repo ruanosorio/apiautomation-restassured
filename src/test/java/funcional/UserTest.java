@@ -10,9 +10,10 @@ import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import utils.BaseTest;
 
 @Feature("Testes para validar CRUD de Usuários")
-public class UserTest {
+public class UserTest extends BaseTest {
 
     private UserClient userClient;
     private int userIdDelecao;
