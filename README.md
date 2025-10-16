@@ -40,7 +40,7 @@ gradle test --info
 * Exemplo para execução de uma classe de testes específica:
 
 ```
-gradle test --tests "SmokeTest"
+gradle test --tests "SmokeTest" ou gradle test --tests "funcional.UserTest"
 ```
 
 ## Para rodar e gerar o relatório:
