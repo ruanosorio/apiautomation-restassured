@@ -28,7 +28,7 @@ jobs:
           java-version: 21
           distribution: temurin
 
-      - name: Cache do Gradle (opcional para acelerar builds)
+      - name: Cache do Gradle
         uses: actions/cache@v4
         with:
           path: |
@@ -52,3 +52,14 @@ jobs:
         with:
           name: allure-report
           path: build/reports/allure-report
+
+      - name: Adicionar resumo do Allure no GitHub
+        if: always()
+        run: |
+          REPORT_PATH="build/reports/allure-report/index.html"
+          if [ -f "$REPORT_PATH" ]; then
+            echo "## 📊 Relatório Allure" >> $GITHUB_STEP_SUMMARY
+            echo "[Abrir relatório Allure]($REPORT_PATH)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Relatório Allure não encontrado" >> $GITHUB_STEP_SUMMARY
+          fi
