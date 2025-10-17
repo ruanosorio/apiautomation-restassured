@@ -10,6 +10,19 @@ repositories {
     mavenCentral()
 }
 
+allure {
+    version = '2.30.0'
+    autoconfigure = true
+    aspectjWeaver = true
+    frameworks {
+        testng {
+            adapterVersion = '2.30.0'
+        }
+    }
+    resultsDir.set(file('build/allure-results'))
+    reportDir.set(file('build/reports/allure-report'))
+}
+
 dependencies {
     implementation 'io.rest-assured:rest-assured:5.5.1'
     implementation 'org.testng:testng:7.11.0'
