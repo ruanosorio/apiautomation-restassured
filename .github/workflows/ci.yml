@@ -53,19 +53,29 @@ jobs:
       - name: Gerar relatório Allure
         run: ./gradlew allureReport
 
-      # 7️⃣ Publicar resumo do Allure no GitHub Actions
-      - name: Publicar resumo do Allure no GitHub Actions
-        if: always()
+      # 7️⃣ Verificar se o relatório foi gerado
+      - name: Verificar relatório Allure
+        id: check_report
         run: |
-          REPORT_URL="https://ruanosorio.github.io/apiautomation-restassured/"
-          echo "## 📊 Relatório Allure" >> $GITHUB_STEP_SUMMARY
-          echo "[Abrir relatório Allure]($REPORT_URL)" >> $GITHUB_STEP_SUMMARY
+          if [ -f "build/reports/allure-report/index.html" ]; then
+            echo "report_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "report_exists=false" >> $GITHUB_OUTPUT
+          fi
 
-      # 8️⃣ Publicar Allure Report no GitHub Pages
+      # 8️⃣ Publicar resumo do Allure no GitHub Actions
+      - name: Publicar resumo do Allure
+        if: steps.check_report.outputs.report_exists == 'true'
+        run: |
+          echo "## 📊 Relatório Allure" >> $GITHUB_STEP_SUMMARY
+          echo "[Abrir relatório Allure](https://ruanosorio.github.io/apiautomation-restassured/index.html)" >> $GITHUB_STEP_SUMMARY
+
+      # 9️⃣ Publicar Allure Report no GitHub Pages
       - name: Publicar Allure Report no GitHub Pages
+        if: steps.check_report.outputs.report_exists == 'true'
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GH_PAT }}       # Use o token criado
+          github_token: ${{ secrets.GH_PAT }}       # Personal Access Token com escopo repo
           publish_dir: ./build/reports/allure-report
           publish_branch: gh-pages
           user_name: "github-actions[bot]"
