@@ -1,65 +1,82 @@
-name: API Automation Pipeline
+name: Testes de API com Relatório Allure
 
 on:
   push:
-    branches:
-      - master
+    branches: ["main", "master"]
   pull_request:
-    branches:
-      - master
+    branches: ["main", "master"]
   workflow_dispatch:
-    inputs:
-      test-run:
-        description: 'Run Tests (y/n)?'
-        required: true
-        default: 'y'
 
 jobs:
-  test:
+  testes:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do repositório
-        uses: actions/checkout@v4
+    - name: Checkout do repositório
+      uses: actions/checkout@v4
 
-      - name: Configurar JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: 21
-          distribution: temurin
+    - name: Configurar JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
 
-      - name: Cache do Gradle
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle
+    - name: Configurar Gradle
+      uses: gradle/actions/setup-gradle@v4
 
-      - name: Dar permissão ao wrapper do Gradle
-        run: chmod +x ./gradlew
+    - name: Dar permissão ao wrapper do Gradle
+      run: chmod +x ./gradlew
 
-      - name: Executar testes com Gradle
-        run: ./gradlew clean test --info
+    - name: Executar Testes
+      run: ./gradlew clean test
 
-      - name: Gerar relatório Allure
-        run: ./gradlew allureReport
+    - name: Gerar relatório Allure
+      run: ./gradlew allureReport
 
-      - name: Publicar relatório Allure como artefato
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report
-          path: build/reports/allure-report
+    - name: 🧾 Resumo dos Testes
+      if: always()
+      run: |
+        RESULTS_DIR="build/allure-results"
+        REPORT_DIR="build/reports/allure-report"
 
-      - name: Adicionar resumo do Allure no GitHub
-        if: always()
-        run: |
-          REPORT_PATH="build/reports/allure-report/index.html"
-          if [ -f "$REPORT_PATH" ]; then
-            echo "## 📊 Relatório Allure" >> $GITHUB_STEP_SUMMARY
-            echo "[Abrir relatório Allure]($REPORT_PATH)" >> $GITHUB_STEP_SUMMARY
+        if [ ! -d "$RESULTS_DIR" ]; then
+          RESULTS_DIR="$REPORT_DIR"
+        fi
+
+        FILES_COUNT=$(ls -A "$RESULTS_DIR" 2>/dev/null | wc -l)
+
+        STATUS="${{ job.status }}"
+        ICON="✅"
+        MSG="Todos os testes foram executados com sucesso!"
+        if [ "$STATUS" != "success" ]; then
+          ICON="❌"
+          MSG="Alguns testes falharam. Verifique os logs abaixo."
+        fi
+
+        {
+          echo "## $ICON Relatório de Testes Allure"
+          echo ""
+          if [ "$FILES_COUNT" -gt 0 ]; then
+            echo "**Arquivos encontrados:** $FILES_COUNT"
           else
-            echo "Relatório Allure não encontrado" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Nenhum arquivo de teste encontrado"
           fi
+          echo ""
+          echo "### 📁 Artefatos"
+          echo "- Resultados: \`$RESULTS_DIR\`"
+          echo "- Relatório HTML: \`$REPORT_DIR\`"
+          echo ""
+          echo "### 🔗 Links Úteis"
+          echo "- Online: [Abrir Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/)"
+          echo "- Local: \`./gradlew allureServe\`"
+          echo ""
+          echo "**Pipeline:** #${{ github.run_number }} | **Branch:** \`${{ github.ref_name }}\`"
+          echo "> ⚙️ $MSG"
+        } >> $GITHUB_STEP_SUMMARY
+
+    - name: Publicar relatório Allure no GitHub Pages
+      if: always()
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build/reports/allure-report
