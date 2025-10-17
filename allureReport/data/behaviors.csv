@@ -1,0 +1,6 @@
+"Epic","Feature","Story","FAILED","BROKEN","PASSED","SKIPPED","UNKNOWN"
+"","","","0","0","2","0","0"
+"","Testes para validar CRUD de Usuários","Criação de novo usuário","0","0","1","0","0"
+"","Testes para validar CRUD de Usuários","Deletar registro de usuário","0","0","1","0","0"
+"","Testes para validar CRUD de Usuários","Consultar Listagem de Usuarios","0","0","1","0","0"
+"","Testes para validar CRUD de Usuários","Atualizar dados de usuário válido","0","0","1","0","0"
